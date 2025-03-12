@@ -1,4 +1,3 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +20,8 @@ import {
   Calendar, 
   AlertTriangle, 
   CheckCircle,
-  ClipboardList 
+  ClipboardList,
+  Phone
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { maintenanceRequests, tenants } from "@/services/mockData";
@@ -43,7 +43,9 @@ const MaintenanceDetail = () => {
   const { id } = useParams<{ id: string }>();
   const request = maintenanceRequests.find((r) => r.id === id);
   
-  const [status, setStatus] = useState(request?.status || "open");
+  const [status, setStatus] = useState<"open" | "in progress" | "completed">(
+    (request?.status as "open" | "in progress" | "completed") || "open"
+  );
   const [note, setNote] = useState("");
   
   if (!request) {
@@ -131,7 +133,10 @@ const MaintenanceDetail = () => {
                 <div className="border-t pt-6">
                   <h3 className="font-semibold mb-4">Update Status</h3>
                   <div className="flex flex-col md:flex-row gap-4">
-                    <Select value={status} onValueChange={setStatus}>
+                    <Select
+                      value={status}
+                      onValueChange={(value: "open" | "in progress" | "completed") => setStatus(value)}
+                    >
                       <SelectTrigger className="w-full md:w-[200px]">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
